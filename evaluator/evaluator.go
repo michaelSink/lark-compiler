@@ -260,7 +260,10 @@ func applyFunction(fn object.Object, args []object.Object) object.Object {
 		functionEnvironment := extendFunctionEnvironment(fn, args)
 		evaluated = Eval(fn.Body, functionEnvironment)
 	case *object.Builtin:
-		return fn.Fn(args...)
+		if result := fn.Fn(args...); result != nil {
+			return result
+		}
+		return NULL
 	default:
 		return newError("not a function: %s", fn.Type())
 	}
